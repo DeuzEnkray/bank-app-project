@@ -1,0 +1,568 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>bankapp.bank &mdash; BankApp 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            BankApp
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../bankapp.html">BankApp Package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">BankApp</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">bankapp.bank</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for bankapp.bank</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Written by Misbahur Rahman</span>
+
+<span class="sd">Contains the Bank class, which controls the core logic of maintaining the bank.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">bankapp</span><span class="w"> </span><span class="kn">import</span> <span class="n">exceptions</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bankapp</span><span class="w"> </span><span class="kn">import</span> <span class="n">bank_account</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bankapp.interfaces</span><span class="w"> </span><span class="kn">import</span> <span class="n">Interface</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bankapp</span><span class="w"> </span><span class="kn">import</span> <span class="n">util</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+
+
+<div class="viewcode-block" id="Bank">
+<a class="viewcode-back" href="../../bankapp.html#bankapp.bank.Bank">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Bank</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents a bank, which handles proper</span>
+<span class="sd">    communication with bank accounts</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">day_duration</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes a Bank.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str): Name of the bank.</span>
+<span class="sd">            day_duration (int): Duration of a single day (in seconds)</span>
+
+<span class="sd">        Attributes:</span>
+<span class="sd">            self.new_bank_status (bool): Indicates whether the bank is new or not.</span>
+<span class="sd">            self.name (str): Name of the bank.</span>
+<span class="sd">            self.interface (Interface): Handles CLI interface.</span>
+<span class="sd">            self.active_account (BankAccount): Current active account.</span>
+<span class="sd">            self.path (str): Path to directory of main file. Helps in loading and saving data.</span>
+<span class="sd">            self.days_elapsed (int): Number of days the bank has been running for.</span>
+<span class="sd">            self.__accounts (list): List of accounts handled by the bank.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">new_bank_status</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">interface</span> <span class="o">=</span> <span class="n">Interface</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__accounts</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">active_account</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">base_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_path</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">days_elapsed</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_data</span><span class="p">()</span>
+
+        <span class="k">except</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">NewBankException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">new_bank_status</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">background_tasks</span><span class="p">(</span><span class="n">day_duration</span><span class="p">)</span>
+
+    <span class="c1"># Method to show available account types</span>
+<div class="viewcode-block" id="Bank.get_account_types">
+<a class="viewcode-back" href="../../bankapp.html#bankapp.bank.Bank.get_account_types">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_account_types</span><span class="p">(</span><span class="n">amount</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the list of available account types based on amount.</span>
+<span class="sd">        The possible account types are - Zero Balance Account,</span>
+<span class="sd">        Value Account and Premium Account</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">             amount(int or float): Available amount in account.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: List of available accounts.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">amount</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">amount</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">amount</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">NegativeAmountException</span><span class="p">()</span>
+
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">InvalidCharacterException</span><span class="p">(</span><span class="n">amount</span><span class="p">,</span> <span class="n">target_type</span><span class="o">=</span><span class="s2">&quot;floats&quot;</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">raise</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">available_types</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">account_types</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Zero Balance Account&#39;</span><span class="p">,</span> <span class="s1">&#39;Value Account&#39;</span><span class="p">,</span> <span class="s1">&#39;Premium Account&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">amount</span> <span class="o">&gt;=</span> <span class="mi">10000</span><span class="p">:</span>
+                <span class="n">available_types</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">amount</span> <span class="o">&gt;=</span> <span class="mi">50000</span><span class="p">:</span>
+                <span class="n">available_types</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="k">return</span> <span class="n">account_types</span><span class="p">[:</span><span class="n">available_types</span><span class="p">]</span></div>
+
+
+    <span class="c1"># Method to create account</span>
+<div class="viewcode-block" id="Bank.create_account">
+<a class="viewcode-back" href="../../bankapp.html#bankapp.bank.Bank.create_account">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_account</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dob</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">initial_deposit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span> <span class="n">acc_type</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Attempts to create a new bank account by creating a new BankAccount object.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name(str): Name of the user.</span>
+<span class="sd">            dob(str): Date of birth of the user in dd-mm-yyyy format.</span>
+<span class="sd">            password(str): Password of the user.</span>
+<span class="sd">            initial_deposit(int or float): Initial amount deposited by the user.</span>
+<span class="sd">            acc_type(str): Type of account of the user.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            account_number or None.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            None is returned if account creation fails.</span>
+<span class="sd">            Exception raised by BankAccount are propagated to be handled by Interface.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">acc</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">acc_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">InvalidOptionException</span><span class="p">(</span><span class="n">acc_type</span><span class="p">)</span>
+
+            <span class="k">match</span> <span class="n">acc_type</span><span class="p">:</span>
+                <span class="k">case</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">acc</span> <span class="o">=</span> <span class="n">bank_account</span><span class="o">.</span><span class="n">ZeroBalanceAccount</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">dob</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">initial_deposit</span><span class="p">)</span>
+                <span class="k">case</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="n">acc</span> <span class="o">=</span> <span class="n">bank_account</span><span class="o">.</span><span class="n">ValueAccount</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">dob</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">initial_deposit</span><span class="p">)</span>
+                <span class="k">case</span> <span class="mi">3</span><span class="p">:</span>
+                    <span class="n">acc</span> <span class="o">=</span> <span class="n">bank_account</span><span class="o">.</span><span class="n">PremiumAccount</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">dob</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">initial_deposit</span><span class="p">)</span>
+
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">raise</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__accounts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">acc</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">acc</span><span class="o">.</span><span class="n">account_no</span></div>
+
+
+    <span class="c1"># Methods to deal with data storage and retrieval</span>
+<div class="viewcode-block" id="Bank.save_data">
+<a class="viewcode-back" href="../../bankapp.html#bankapp.bank.Bank.save_data">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Saves account data into a txt file upon exit.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encode_data</span><span class="p">()</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;user_data.txt&#39;</span><span class="p">),</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;days.txt&#39;</span><span class="p">),</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">days_elapsed</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="Bank.load_data">
+<a class="viewcode-back" href="../../bankapp.html#bankapp.bank.Bank.load_data">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Loads account data when program starts.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;user_data.txt&#39;</span><span class="p">),</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+
+            <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">decoded_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decode_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">decoded_data</span><span class="p">:</span>
+                <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">acc_type</span> <span class="o">=</span> <span class="n">i</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">obj</span> <span class="o">=</span> <span class="kc">None</span>
+
+                <span class="k">match</span> <span class="n">acc_type</span><span class="p">:</span>
+                    <span class="k">case</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="n">obj</span> <span class="o">=</span> <span class="n">bank_account</span><span class="o">.</span><span class="n">ZeroBalanceAccount</span><span class="o">.</span><span class="n">load_account</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                    <span class="k">case</span> <span class="mi">2</span><span class="p">:</span>
+                        <span class="n">obj</span> <span class="o">=</span> <span class="n">bank_account</span><span class="o">.</span><span class="n">ValueAccount</span><span class="o">.</span><span class="n">load_account</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                    <span class="k">case</span> <span class="mi">3</span><span class="p">:</span>
+                        <span class="n">obj</span> <span class="o">=</span> <span class="n">bank_account</span><span class="o">.</span><span class="n">PremiumAccount</span><span class="o">.</span><span class="n">load_account</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">__accounts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+
+            <span class="n">bank_account</span><span class="o">.</span><span class="n">BankAccount</span><span class="o">.</span><span class="n">set_available_account_number</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">NewBankException</span><span class="p">()</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;days.txt&#39;</span><span class="p">),</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">days</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">days_elapsed</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">days</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">days_elapsed</span> <span class="o">=</span> <span class="mi">1</span></div>
+
+
+<div class="viewcode-block" id="Bank.encode_data">
+<a class="viewcode-back" href="../../bankapp.html#bankapp.bank.Bank.encode_data">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">encode_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Encodes data into a txt friendly format</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            encoded_data (str): txt file friendly string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__accounts</span><span class="p">:</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">account_info_save</span><span class="p">())</span>
+
+        <span class="n">encoded_data</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">encoded_data</span></div>
+
+
+<div class="viewcode-block" id="Bank.decode_data">
+<a class="viewcode-back" href="../../bankapp.html#bankapp.bank.Bank.decode_data">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">decode_data</span><span class="p">(</span><span class="n">data_strs</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Decodes txt file strings into program friendly format</span>
+<span class="sd">        for loading data</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data_strs (list): List of strings containing account data</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            decoded_data (list): List of program friendly data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Data&#39;s format: name, dob, adult, acc_no, balance, daily_bal, avg_monthly_bal, pass_hash, acc_type</span>
+        <span class="n">decoded_data</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data_strs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">i</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">:</span>
+                <span class="n">i</span> <span class="o">=</span> <span class="n">i</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+            <span class="n">curr_data</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+
+            <span class="n">y</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">format_dob</span><span class="p">(</span><span class="n">curr_data</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">curr_data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">m</span> <span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+            <span class="n">curr_data</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">curr_data</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span>
+            <span class="n">curr_data</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">curr_data</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+            <span class="n">curr_data</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">curr_data</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+            <span class="n">curr_data</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">curr_data</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
+            <span class="n">curr_data</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">curr_data</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span>
+            <span class="n">curr_data</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">curr_data</span><span class="p">[</span><span class="mi">8</span><span class="p">])</span>
+
+            <span class="n">decoded_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">curr_data</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">decoded_data</span></div>
+
+
+    <span class="c1"># Methods to deal with login/logout</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">login_status</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns whether an account is active or not</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">active_account</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+<div class="viewcode-block" id="Bank.login">
+<a class="viewcode-back" href="../../bankapp.html#bankapp.bank.Bank.login">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">login</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">acc_no</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Logs a user into their bank account. Raises exceptions</span>
+<span class="sd">        in case of incorrect account number or passwords</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            acc_no (str): input account number</span>
+<span class="sd">            password (str): input password</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">util</span><span class="o">.</span><span class="n">validate_account_no</span><span class="p">(</span><span class="n">acc_no</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">InvalidFormatException</span><span class="p">(</span><span class="s2">&quot;account number&quot;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">acc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__accounts</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">acc</span><span class="o">.</span><span class="n">account_no</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">acc_no</span><span class="p">):</span>
+                <span class="n">input_password_hash</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">hash_password</span><span class="p">(</span><span class="n">password</span><span class="p">,</span> <span class="n">acc</span><span class="o">.</span><span class="n">account_no</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">input_password_hash</span> <span class="o">==</span> <span class="n">acc</span><span class="o">.</span><span class="n">password_hash</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">active_account</span> <span class="o">=</span> <span class="n">acc</span>
+                    <span class="k">return</span>
+                <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">InvalidCredentialsException</span><span class="p">(</span><span class="n">password</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">InvalidCredentialsException</span><span class="p">(</span><span class="n">username</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Bank.logout">
+<a class="viewcode-back" href="../../bankapp.html#bankapp.bank.Bank.logout">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">logout</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Logs a user out of their bank account.</span>
+<span class="sd">        If no user is logged in, returns False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">active_account</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">active_account</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">return</span>
+        <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">NoUserLoggedInException</span><span class="p">()</span></div>
+
+
+    <span class="c1"># Methods dealing with transactions</span>
+<div class="viewcode-block" id="Bank.withdraw">
+<a class="viewcode-back" href="../../bankapp.html#bankapp.bank.Bank.withdraw">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">withdraw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span><span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Withdraws money from bank account</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            amount (float): Amount of money to be withdrawn</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">login_status</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">NoUserLoggedInException</span><span class="p">(</span><span class="s2">&quot;withdraw&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">amount</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">amount</span><span class="p">)</span>
+
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">InvalidCharacterException</span><span class="p">(</span><span class="n">amount</span><span class="p">,</span> <span class="s2">&quot;Numbers&quot;</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">active_account</span><span class="o">.</span><span class="n">withdraw</span><span class="p">(</span><span class="n">amount</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Bank.deposit">
+<a class="viewcode-back" href="../../bankapp.html#bankapp.bank.Bank.deposit">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">deposit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amount</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Deposits money into the bank account</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            amount (float): Amount of money to be deposited</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">login_status</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">NoUserLoggedInException</span><span class="p">(</span><span class="s2">&quot;withdraw&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">amount</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">amount</span><span class="p">)</span>
+
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">InvalidCharacterException</span><span class="p">(</span><span class="n">amount</span><span class="p">,</span> <span class="s2">&quot;Numbers&quot;</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">active_account</span><span class="o">.</span><span class="n">deposit</span><span class="p">(</span><span class="n">amount</span><span class="p">)</span></div>
+
+
+    <span class="c1"># Methods to deal with periodic tasks</span>
+<div class="viewcode-block" id="Bank.background_tasks">
+<a class="viewcode-back" href="../../bankapp.html#bankapp.bank.Bank.background_tasks">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">background_tasks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">day_duration</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a thread to execute self.task_cycle()</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            day_duration (int): Duration of a single day (in seconds)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">bg_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">task_cycle</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="n">day_duration</span><span class="p">,),</span> <span class="n">daemon</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="n">bg_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Bank.task_cycle">
+<a class="viewcode-back" href="../../bankapp.html#bankapp.bank.Bank.task_cycle">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">task_cycle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">day_duration</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Simulates a day. It also executes daily and monthly tasks.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            day_duration (int): Duration of a single day (in seconds)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_daily_amount</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">days_elapsed</span> <span class="o">%</span> <span class="mi">30</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">update_monthly_amount</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">interests_penalties</span><span class="p">()</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">days_elapsed</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="n">time_elapsed</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">day_duration</span> <span class="o">-</span> <span class="n">time_elapsed</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="Bank.update_daily_amount">
+<a class="viewcode-back" href="../../bankapp.html#bankapp.bank.Bank.update_daily_amount">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_daily_amount</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates the daily balance of each user.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">acc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__accounts</span><span class="p">:</span>
+            <span class="n">acc</span><span class="o">.</span><span class="n">update_daily_balance</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Bank.update_monthly_amount">
+<a class="viewcode-back" href="../../bankapp.html#bankapp.bank.Bank.update_monthly_amount">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_monthly_amount</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates the average monthly balance of each user.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">acc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__accounts</span><span class="p">:</span>
+            <span class="n">acc</span><span class="o">.</span><span class="n">update_monthly_balance</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Bank.interests_penalties">
+<a class="viewcode-back" href="../../bankapp.html#bankapp.bank.Bank.interests_penalties">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">interests_penalties</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Pays out interest or deducts penalties, based on</span>
+<span class="sd">        whether minimum balance was maintained or not.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">acc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__accounts</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">acc</span><span class="o">.</span><span class="n">avg_monthly_balance</span> <span class="o">&gt;=</span> <span class="n">acc</span><span class="o">.</span><span class="n">minimum_balance</span><span class="p">:</span>
+                <span class="n">acc</span><span class="o">.</span><span class="n">deposit</span><span class="p">(</span><span class="n">acc</span><span class="o">.</span><span class="n">avg_monthly_balance</span> <span class="o">*</span> <span class="n">acc</span><span class="o">.</span><span class="n">interest</span> <span class="o">/</span> <span class="mi">12</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Ensures that in case of negative monthly balance, no more than allowed</span>
+                <span class="c1"># penalty amount is deducted</span>
+
+                <span class="n">penalty_percentage</span> <span class="o">=</span> <span class="nb">min</span><span class="p">((</span><span class="n">acc</span><span class="o">.</span><span class="n">minimum_balance</span> <span class="o">-</span> <span class="n">acc</span><span class="o">.</span><span class="n">avg_monthly_balance</span><span class="p">)</span> <span class="o">/</span> <span class="n">acc</span><span class="o">.</span><span class="n">minimum_balance</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="n">penalty_amount</span> <span class="o">=</span> <span class="mf">0.05</span> <span class="o">*</span> <span class="n">acc</span><span class="o">.</span><span class="n">minimum_balance</span>
+                <span class="n">acc</span><span class="o">.</span><span class="n">withdraw</span><span class="p">(</span><span class="n">penalty_amount</span> <span class="o">*</span> <span class="n">penalty_percentage</span><span class="p">,</span> <span class="n">force</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span></div>
+</div>
+
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Misbahur Rahman.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

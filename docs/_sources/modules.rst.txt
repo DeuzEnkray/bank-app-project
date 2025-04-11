@@ -1,0 +1,7 @@
+BankApp
+=======
+
+.. toctree::
+   :maxdepth: 4
+
+   bankapp

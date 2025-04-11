@@ -1,0 +1,386 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>bankapp.interfaces &mdash; BankApp 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            BankApp
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../bankapp.html">BankApp Package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">BankApp</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">bankapp.interfaces</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for bankapp.interfaces</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Written by Misbahur Rahman</span>
+
+<span class="sd">Contains all the user interfaces needed by the bank class.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">bankapp</span><span class="w"> </span><span class="kn">import</span> <span class="n">exceptions</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pwinput</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bankapp</span><span class="w"> </span><span class="kn">import</span> <span class="n">util</span>
+
+
+<div class="viewcode-block" id="Interface">
+<a class="viewcode-back" href="../../bankapp.html#bankapp.interfaces.Interface">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Interface</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Handles all user interfaces of the bank.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bank</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates an Interface object</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            bank (Bank): The bank whose interface is handles by this object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">bank</span> <span class="o">=</span> <span class="n">bank</span>
+
+<div class="viewcode-block" id="Interface.main_interface">
+<a class="viewcode-back" href="../../bankapp.html#bankapp.interfaces.Interface.main_interface">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">main_interface</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Defines the main interface of the bank</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">util</span><span class="o">.</span><span class="n">clear_screen</span><span class="p">()</span>
+
+        <span class="n">login_status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bank</span><span class="o">.</span><span class="n">login_status</span>
+        <span class="n">main_options</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="n">hidden_options</span> <span class="o">=</span> <span class="mi">4</span>
+        <span class="n">total_options</span> <span class="o">=</span> <span class="n">main_options</span> <span class="o">+</span> <span class="n">hidden_options</span> <span class="k">if</span> <span class="n">login_status</span> <span class="k">else</span> <span class="n">main_options</span>
+        <span class="n">option</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bank</span><span class="o">.</span><span class="n">new_bank_status</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bank</span><span class="o">.</span><span class="n">new_bank_status</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bank</span><span class="o">.</span><span class="n">new_bank_status</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;---</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">bank</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> Bank---</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Choose an option:&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;1. Create an Account&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;2. Login&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">login_status</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;3. Display Account Info&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;4. Deposit&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;5. Withdraw&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;6. Logout&quot;</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;0. Exit&quot;</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Choose an Option: &quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">option</span> <span class="o">=</span> <span class="nb">input</span><span class="p">()</span>
+            <span class="n">option</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">option</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">option</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">total_options</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">InvalidOptionException</span><span class="p">(</span><span class="n">option</span><span class="p">)</span>
+
+            <span class="k">match</span> <span class="n">option</span><span class="p">:</span>
+                <span class="k">case</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">util</span><span class="o">.</span><span class="n">clear_screen</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">account_creation_interface</span><span class="p">()</span>
+
+                <span class="k">case</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="n">util</span><span class="o">.</span><span class="n">clear_screen</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">login_interface</span><span class="p">()</span>
+
+                <span class="k">case</span> <span class="mi">3</span><span class="p">:</span>
+                    <span class="n">util</span><span class="o">.</span><span class="n">clear_screen</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">account_info_interface</span><span class="p">()</span>
+
+                <span class="k">case</span> <span class="mi">4</span><span class="p">:</span>
+                    <span class="n">util</span><span class="o">.</span><span class="n">clear_screen</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">deposit_interface</span><span class="p">()</span>
+
+                <span class="k">case</span> <span class="mi">5</span><span class="p">:</span>
+                    <span class="n">util</span><span class="o">.</span><span class="n">clear_screen</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">withdraw_interface</span><span class="p">()</span>
+
+                <span class="k">case</span> <span class="mi">6</span><span class="p">:</span>
+                    <span class="n">util</span><span class="o">.</span><span class="n">clear_screen</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logout_interface</span><span class="p">()</span>
+
+                <span class="k">case</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">util</span><span class="o">.</span><span class="n">clear_screen</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">exit_interface</span><span class="p">()</span>
+                    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">option</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">InvalidCharacterException</span><span class="p">(</span><span class="n">option</span><span class="p">,</span> <span class="s2">&quot;integer&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">InvalidCharacterException</span><span class="p">(</span><span class="n">target_type</span> <span class="o">=</span> <span class="s2">&quot;integers&quot;</span><span class="p">)</span>
+
+            <span class="k">except</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">InvalidCharacterException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">()</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="k">except</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">InvalidOptionException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;An unknown error </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2"> has occurred&quot;</span><span class="p">)</span>
+
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="nb">input</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="Interface.account_creation_interface">
+<a class="viewcode-back" href="../../bankapp.html#bankapp.interfaces.Interface.account_creation_interface">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">account_creation_interface</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Account creation interfaces.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Enter your name: &quot;</span><span class="p">)</span>
+            <span class="n">dob</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Enter your date of birth (dd-mm-yyyy): &quot;</span><span class="p">)</span>
+
+            <span class="n">password</span> <span class="o">=</span> <span class="n">pwinput</span><span class="o">.</span><span class="n">pwinput</span><span class="p">(</span><span class="s2">&quot;Enter a password: &quot;</span><span class="p">)</span>
+            <span class="n">confirm_password</span> <span class="o">=</span> <span class="n">pwinput</span><span class="o">.</span><span class="n">pwinput</span><span class="p">(</span><span class="s2">&quot;Confirm password: &quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">password</span> <span class="o">!=</span> <span class="n">confirm_password</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">PasswordMismatchException</span><span class="p">()</span>
+
+            <span class="n">initial_deposit</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Enter an initial amount to deposit: &quot;</span><span class="p">)</span>
+
+            <span class="c1"># Ensuring a valid account type is selected</span>
+            <span class="n">available_account_types</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bank</span><span class="o">.</span><span class="n">get_account_types</span><span class="p">(</span><span class="n">initial_deposit</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Available Account Types:&quot;</span><span class="p">)</span>
+            <span class="n">util</span><span class="o">.</span><span class="n">display_accounts</span><span class="p">(</span><span class="n">available_account_types</span><span class="p">)</span>
+            <span class="n">account_type</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Enter account type (Sn): &quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">account_type</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">available_account_types</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">int</span><span class="p">(</span><span class="n">account_type</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)):</span>
+                <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">InvalidOptionException</span><span class="p">(</span><span class="n">account_type</span><span class="p">)</span>
+
+            <span class="n">acc_no</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bank</span><span class="o">.</span><span class="n">create_account</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">dob</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">initial_deposit</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">account_type</span><span class="p">))</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Account creation failed!&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Account created successfully! Your account number is </span><span class="si">{</span><span class="n">acc_no</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Interface.login_interface">
+<a class="viewcode-back" href="../../bankapp.html#bankapp.interfaces.Interface.login_interface">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">login_interface</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Login interface.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">acc_no</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Enter your account number: &quot;</span><span class="p">)</span>
+        <span class="n">password</span> <span class="o">=</span> <span class="n">pwinput</span><span class="o">.</span><span class="n">pwinput</span><span class="p">(</span><span class="s2">&quot;Enter your password: &quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">()</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bank</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">acc_no</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">InvalidFormatException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Account number must be a 4 digit integer&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Login successful! Welcome </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">bank</span><span class="o">.</span><span class="n">active_account</span><span class="o">.</span><span class="n">user_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Interface.logout_interface">
+<a class="viewcode-back" href="../../bankapp.html#bankapp.interfaces.Interface.logout_interface">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">logout_interface</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Logout interface.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">confirm</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Are you sure you want to logout of your account [y/n]: &quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">confirm</span><span class="o">.</span><span class="n">lower</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bank</span><span class="o">.</span><span class="n">logout</span><span class="p">()</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Logout successful!&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Logout cancelled!&quot;</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">NoUserLoggedInException</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No user logged in&quot;</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;An unknown error occurred!&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Interface.withdraw_interface">
+<a class="viewcode-back" href="../../bankapp.html#bankapp.interfaces.Interface.withdraw_interface">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">withdraw_interface</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Withdrawal interface</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">amount</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Enter an amount to withdraw: &quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bank</span><span class="o">.</span><span class="n">withdraw</span><span class="p">(</span><span class="n">amount</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">NoUserLoggedInException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">e</span><span class="o">.</span><span class="n">login_prompt</span><span class="p">()</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Withdrawal of Rs </span><span class="si">{</span><span class="n">amount</span><span class="si">}</span><span class="s2"> successful!&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Interface.deposit_interface">
+<a class="viewcode-back" href="../../bankapp.html#bankapp.interfaces.Interface.deposit_interface">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">deposit_interface</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Deposit interface.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">amount</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Enter an amount to deposit: &quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bank</span><span class="o">.</span><span class="n">deposit</span><span class="p">(</span><span class="n">amount</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">NoUserLoggedInException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">e</span><span class="o">.</span><span class="n">login_prompt</span><span class="p">()</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Rs </span><span class="si">{</span><span class="n">amount</span><span class="si">}</span><span class="s2"> deposited successful!&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Interface.exit_interface">
+<a class="viewcode-back" href="../../bankapp.html#bankapp.interfaces.Interface.exit_interface">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">exit_interface</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Exit interface</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Exiting Bank&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Saving data...&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bank</span><span class="o">.</span><span class="n">save_data</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Data saved successfully!&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Interface.account_info_interface">
+<a class="viewcode-back" href="../../bankapp.html#bankapp.interfaces.Interface.account_info_interface">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">account_info_interface</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Account information interface</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">bank</span><span class="o">.</span><span class="n">login_status</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">NoUserLoggedInException</span><span class="p">(</span><span class="n">raiser</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bank</span><span class="p">)</span>
+
+        <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bank</span><span class="o">.</span><span class="n">active_account</span><span class="o">.</span><span class="n">account_info_display</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;account_type&quot;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Name: </span><span class="si">{</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Account No: </span><span class="si">{</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;account_no&quot;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Balance: </span><span class="si">{</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;balance&quot;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Minimum Balance: </span><span class="si">{</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;minimum_balance&quot;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Interest on Balance: </span><span class="si">{</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;interest&quot;</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Discount on Loan Interest: </span><span class="si">{</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;discount&quot;</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Misbahur Rahman.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
