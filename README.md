@@ -14,15 +14,25 @@ A simple object-oriented Python banking system with support for multiple account
 
 ## 🖥️ Installation and Usage
 
-Clone the repo
+Clone the Repository
 
-```git clone https://github.com/DeuzEnkray/bank-app-project```
+```bash
+git clone https://github.com/DeuzEnkray/bank-app-project
+```
 
 Install dependencies
 
-```pip install -r requirements.txt```
+```bash
+pip install -r requirements.txt
+```
 
-Run main.py
+After the repository has been cloned and the required packages have been installed, run `main.py`
+
+## 🚀Demo
+
+📽️ [Project Demo Video](https://www.youtube.com/watch?v=_pLg_r3pyMc)
+
+📚 [Documentation](https://deuzenkray.github.io/bank-app-project/)
 
 ## 💡 Future Plans
 - Change the structure of bank_account module (implement multi-level inheritance)
