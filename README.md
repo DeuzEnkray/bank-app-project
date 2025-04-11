@@ -12,17 +12,19 @@ A simple object-oriented Python banking system with support for multiple account
 - Deducts penalty if miinimum monthly balance is not maintained
 - Saves data as text files
 
-## To Use
+## 🖥️ Installation and Usage
 
 Clone the repo
+
 ```git clone https://github.com/DeuzEnkray/bank-app-project```
 
 Install dependencies
+
 ```pip install -r requirements.txt```
 
 Run main.py
 
-## Future Plans
+## 💡 Future Plans
 - Change the structure of bank_account module (implement multi-level inheritance)
 - Implement loans and fixed deposits
 - Simulate a stock market
